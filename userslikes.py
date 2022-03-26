@@ -1,9 +1,9 @@
+# returns Bella Hadid's liked tweets
+
 import requests
 import os
 import json
 
-# To set your enviornment variables in your terminal run the following line:
-# export 'BEARER_TOKEN'='<your_bearer_token>'
 bearer_token = os.environ.get("AAAAAAAAAAAAAAAAAAAAAAQyawEAAAAApXudbijx8skU%2FTV65uzC0zPZgS8%3DkEjaeYoDHNeEzHgQQCZLD8B6sf3gKuJeHjHIIAzc3x6l5qyKE9")
 
 
@@ -16,8 +16,7 @@ def create_url():
     # possibly_sensitive, promoted_metrics, public_metrics, referenced_tweets,
     # source, text, and withheld
     tweet_fields = "tweet.fields=lang,author_id"
-    # Be sure to replace your-user-id with your own user ID or one of an authenticating user
-    # You can find a user ID by using the user lookup endpoint
+    # Bella Hadid's user ID
     id = "171682388"
     # You can adjust ids to include a single Tweets.
     # Or you can add to up to 100 comma-separated IDs
@@ -30,7 +29,7 @@ def bearer_oauth(r):
     Method required by bearer token authentication.
     """
 
-    r.headers["Authorization"] = f"Bearer {AAAAAAAAAAAAAAAAAAAAAAQyawEAAAAApXudbijx8skU%2FTV65uzC0zPZgS8%3DkEjaeYoDHNeEzHgQQCZLD8B6sf3gKuJeHjHIIAzc3x6l5qyKE9}"
+    r.headers["Authorization"] = "Bearer{bearer_token}".format(bearer_token);
     r.headers["User-Agent"] = "v2LikedTweetsPython"
     return r
 
