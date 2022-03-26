@@ -1,6 +1,8 @@
 import requests
 import json
 
+from collections import Counter
+
 def auth() -> str: 
     return "AAAAAAAAAAAAAAAAAAAAAAQyawEAAAAApXudbijx8skU%2FTV65uzC0zPZgS8%3DkEjaeYoDHNeEzHgQQCZLD8B6sf3gKuJeHjHIIAzc3x6l5qyKE9"
 
@@ -29,10 +31,25 @@ def connect_to_endpoint(url, headers, params, next_token = None):
     return response.json()
     
 def process_likes(json_data):
-    logged_likes = {}
-    for data in json_data:
-        print(data["author_id"])
+    #dict = {}
+    #for data in json_data:
+    #    dict.update({data["author_id"]: 1})
     
+    #ids = dict.keys()
+    #print(ids)
+
+    #for x in ids:
+    #    length = len(dict.fromkeys(x, 1))
+
+    ls = []
+    for data in json_data:
+        ls.append(data["author_id"])
+    dictionary = Counter(ls)
+    print(dictionary)
+    
+
+
+    # return array where each element is author id and number of times liked
 
 if __name__ == "__main__":
     bearer_token = auth()
@@ -40,9 +57,9 @@ if __name__ == "__main__":
     keyword = "xbox lang:en"
     start_time = "2021-03-01T00:00:00.000Z"
     end_time = "2021-03-31T00:00:00.000Z"
-    max_results = 5
+    max_results = 100
     
     url = create_url(keyword, start_time,end_time, max_results)
     json_response = connect_to_endpoint(url[0], headers, url[1])
-    # print(json.dumps(json_response, indent=4, sort_keys=True))
+    print(json.dumps(json_response, indent=4, sort_keys=True))
     process_likes(json_response["data"])
