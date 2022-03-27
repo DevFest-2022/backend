@@ -25,7 +25,7 @@ class User:
             "name": self.name,
             "handle": self.handle,
             "bio": self.bio,
-            "photo_url": self.photo_url
+            "photo_url": fetch_high_res_pfp(self.photo_url)
         }
 
     def __str__(self):
@@ -51,3 +51,7 @@ def _safely_get_bool(json_data: dict, key: str) -> bool:
         return json_data[key]
     else:
         return False
+
+def fetch_high_res_pfp(url):
+    newurl = url.replace("_normal", "", 1)
+    return newurl

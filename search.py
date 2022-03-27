@@ -67,6 +67,3 @@ def favorite_users(handle: str, max_processed_tweets: int, max_results: int) -> 
         'results': results
     }
 
-def fetch_high_res_pfp(url):
-    newurl = url.replace("_normal", "", 1)
-    return newurl
