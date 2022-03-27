@@ -1,6 +1,6 @@
 import twitter
 
-def _find_likes(user_id: str, max_results: int):
+def _find_likes(user_id: str, max_results: int) -> list[dict]:
     api_endpoint = f"2/users/{user_id}/liked_tweets"
     query_params =  {
         'max_results':  max_results,
@@ -8,20 +8,21 @@ def _find_likes(user_id: str, max_results: int):
     }
     return twitter.query(api_endpoint, query_params)["data"]
 
-def process_likes(json_data):
-    dictionary = {}
-    for data in json_data:
-        if dictionary.get(data["author_id"]) == None:
-            dictionary.update({data["author_id"]: 1})
+def _rank_most_liked_users(liked_tweets: list[dict]) -> list[str]:
+    user_like_counts = {}
+    for tweet in liked_tweets:
+        author_id = tweet["author_id"]
+        if author_id in user_like_counts:
+            user_like_counts[author_id] += 1
         else:
-            x = dictionary.pop(data["author_id"])
-            dictionary.update({data["author_id"]: x+1})
+            user_like_counts[author_id] = 1
+    
+    sorted_user_like_counts = sorted(
+        user_like_counts.items(), 
+        key=lambda item: item[1], 
+        reverse=True)
 
-    sorted_dict = dict(sorted(dictionary.items(),
-                           key=lambda item: item[1],
-                           reverse=True))
-
-    return sorted_dict
+    return [item[0] for item in sorted_user_like_counts]
     
 
 def id_to_handle(idnum):
@@ -45,14 +46,15 @@ def handle_to_id(handle):
     return json_response
 
 def finalfunction(username):
-    searched_user = (handle_to_id(username)["data"])
-    id = searched_user.get("id")
+    searched_user = handle_to_id(username)["data"]
+    print(searched_user)
+    id = searched_user["id"]
     liked_tweets = _find_likes(user_id=id, max_results=5)
-    dictionary = process_likes(liked_tweets)
+    ranked_users = _rank_most_liked_users(liked_tweets=liked_tweets)
 
     array = []
     counter = 0
-    for x in dictionary:
+    for x in ranked_users:
         if(counter==5):
             break
         response = id_to_handle(x)
