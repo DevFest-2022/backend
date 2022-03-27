@@ -1,7 +1,12 @@
-import json
 import twitter
 
-from collections import Counter
+def _find_likes(user_id: str, max_results: int):
+    api_endpoint = f"2/users/{user_id}/liked_tweets"
+    query_params =  {
+        'max_results':  max_results,
+        'tweet.fields': {"author_id"}
+    }
+    return twitter.query(api_endpoint, query_params)["data"]
 
 def process_likes(json_data):
     dictionary = {}
@@ -42,14 +47,8 @@ def handle_to_id(handle):
 def finalfunction(username):
     searched_user = (handle_to_id(username)["data"])
     id = searched_user.get("id")
-    api_endpoint = "2/users/"+str(id)+"/liked_tweets"
-    query_params =  {
-        'max_results':  100,
-        'tweet.fields': {"author_id"},
-        'next_token': {}
-    }
-    json_response = twitter.query(api_endpoint, query_params)
-    dictionary = process_likes(json_response["data"])
+    liked_tweets = _find_likes(user_id=id, max_results=5)
+    dictionary = process_likes(liked_tweets)
 
     array = []
     counter = 0
