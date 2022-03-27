@@ -40,7 +40,8 @@ def handle_to_id(handle):
     return json_response
 
 def finalfunction(username):
-    id = (handle_to_id(username)["data"]).get("id")
+    searched_user = (handle_to_id(username)["data"])
+    id = searched_user.get("id")
     api_endpoint = "2/users/"+str(id)+"/liked_tweets"
     query_params =  {
         'max_results':  100,
@@ -57,14 +58,19 @@ def finalfunction(username):
             break
         response = id_to_handle(x)
         temp = {}
-        temp.update({"Name": response["data"].get('name')})
-        temp.update({"Handle": response["data"].get('username')})
-        temp.update({"Photo": response["data"].get('profile_image_url')})
-        temp.update({"Bio": response["data"].get('description')})
+        temp.update({"name": response["data"].get('name')})
+        temp.update({"handle": response["data"].get('username')})
+        temp.update({"photo": response["data"].get('profile_image_url')})
+        temp.update({"bio": response["data"].get('description')})
         array.append(temp)
         counter+=1
 
-    return array
+    searched_user_formatted = {}
+    searched_user_formatted["name"] = searched_user["name"]
+    searched_user_formatted["handle"]= searched_user["username"]
+    searched_user_formatted["photo"]= searched_user["profile_image_url"]
+    searched_user_formatted["bio"] = searched_user["description"]
+    return {'user': searched_user_formatted, 'results': array}
     
 
 

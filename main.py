@@ -1,4 +1,5 @@
 from flask import Flask
+import hi
 
 app = Flask(__name__)
 
@@ -6,6 +7,6 @@ app = Flask(__name__)
 def hello():
     return 'Hello, World!'
 
-@app.route('/likes')
-def likes():
-    return "List of all liked users should go here!"
+@app.route('/search/<username>')
+def main(username):
+    return hi.finalfunction(username)
