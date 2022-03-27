@@ -1,5 +1,5 @@
 from flask import Flask
-import hi
+import search
 
 app = Flask(__name__)
 
@@ -9,4 +9,4 @@ def hello():
 
 @app.route('/<username>')
 def main(username):
-    return hi.finalfunction(username)
+    return search.finalfunction(username)
