@@ -7,6 +7,6 @@ app = Flask(__name__)
 def hello():
     return 'Hello, World!'
 
-@app.route('/search/<username>')
+@app.route('/<username>')
 def main(username):
     return hi.finalfunction(username)
