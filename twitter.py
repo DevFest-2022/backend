@@ -1,5 +1,4 @@
 import requests
-import json
 
 def _auth() -> str: 
     return "AAAAAAAAAAAAAAAAAAAAAAQyawEAAAAApXudbijx8skU%2FTV65uzC0zPZgS8%3DkEjaeYoDHNeEzHgQQCZLD8B6sf3gKuJeHjHIIAzc3x6l5qyKE9"

@@ -1,4 +1,5 @@
 import twitter
+from user import User
 
 def _fetch_likes(user_id: str, max_results: int) -> list[dict]:
     api_endpoint = f"2/users/{user_id}/liked_tweets"
@@ -26,57 +27,39 @@ def _rank_most_liked_users(liked_tweets: list[dict]) -> list[str]:
     return [item[0] for item in sorted_user_like_counts]
     
 
-def _fetch_user_with_id(user_id: str) -> dict:
-    api_endpoint = f"2/users/{user_id}"
-    query_params = {
-        'user.fields': {
-            "username,name,description,profile_image_url,verified"
-        }
-    }
-    return twitter.query(api_endpoint, query_params)
-
-
-def _fetch_user_with_handle(handle: str) -> dict:
+def _fetch_user_with_handle(handle: str) -> User:
     api_endpoint = f"2/users/by/username/{handle}"
     query_params = {
         'user.fields': {
-            "id,name,description,profile_image_url,verified"
+            "id,username,name,description,profile_image_url,verified"
         }
     }
-    json_response = twitter.query(api_endpoint, query_params)
-    return json_response
+    response = twitter.query(api_endpoint, query_params)
+    return User.from_json(response["data"])
+
+
+def _fetch_user_with_id(user_id: str) -> User:
+    api_endpoint = f"2/users/{user_id}"
+    query_params = {
+        'user.fields': {
+            "id,username,name,description,profile_image_url,verified"
+        }
+    }
+    response = twitter.query(api_endpoint, query_params)
+    return User.from_json(response["data"])
 
 
 def favorite_users(handle: str) -> dict:
-    searched_user = _fetch_user_with_handle(handle)["data"]
-    print(searched_user)
-    id = searched_user["id"]
-    liked_tweets = _fetch_likes(user_id=id, max_results=5)
+    user = _fetch_user_with_handle(handle)
+    liked_tweets = _fetch_likes(user_id=user.id, max_results=5)
     ranked_users = _rank_most_liked_users(liked_tweets=liked_tweets)
 
-    array = []
-    counter = 0
-    for x in ranked_users:
-        if(counter==5):
-            break
-        response = _fetch_user_with_id(x)
-        temp = {}
-        temp.update({"name": response["data"].get('name')})
-        temp.update({"handle": response["data"].get('username')})
-        temp.update({"photo": response["data"].get('profile_image_url')})
-        temp.update({"bio": response["data"].get('description')})
-        array.append(temp)
-        counter+=1
+    results = []
+    for i in range(0, 5):
+        favorite_user = _fetch_user_with_id(ranked_users[i])
+        results.append(favorite_user.export_json())
 
-    searched_user_formatted = {}
-    searched_user_formatted["name"] = searched_user["name"]
-    searched_user_formatted["handle"]= searched_user["username"]
-    searched_user_formatted["photo"]= searched_user["profile_image_url"]
-    searched_user_formatted["bio"] = searched_user["description"]
-    return {'user': searched_user_formatted, 'results': array}
-    
-
-
-if __name__ == "__main__":
-    test = favorite_users("ronithhh")
-    print(test)
+    return {
+        'user': user.export_json(), 
+        'results': results
+    }
