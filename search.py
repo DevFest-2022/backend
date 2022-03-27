@@ -1,7 +1,7 @@
 import twitter
 from user import User
 
-def _fetch_likes(user_id: str, max_results: int) -> list[dict]:
+def _fetch_likes(user_id: str, max_results: int) -> list:
     api_endpoint = f"2/users/{user_id}/liked_tweets"
     query_params =  {
         'max_results':  max_results,
@@ -10,7 +10,7 @@ def _fetch_likes(user_id: str, max_results: int) -> list[dict]:
     return twitter.query(api_endpoint, query_params)["data"]
 
 
-def _rank_most_liked_users(liked_tweets: list[dict]) -> list[str]:
+def _rank_most_liked_users(liked_tweets: list) -> list:
     user_like_counts = {}
     for tweet in liked_tweets:
         author_id = tweet["author_id"]
