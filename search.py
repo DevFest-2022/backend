@@ -1,6 +1,6 @@
 import twitter
 
-def _find_likes(user_id: str, max_results: int) -> list[dict]:
+def _fetch_likes(user_id: str, max_results: int) -> list[dict]:
     api_endpoint = f"2/users/{user_id}/liked_tweets"
     query_params =  {
         'max_results':  max_results,
@@ -26,8 +26,7 @@ def _rank_most_liked_users(liked_tweets: list[dict]) -> list[str]:
     return [item[0] for item in sorted_user_like_counts]
     
 
-
-def _find_user_with_id(user_id: str) -> dict:
+def _fetch_user_with_id(user_id: str) -> dict:
     api_endpoint = f"2/users/{user_id}"
     query_params = {
         'user.fields': {
@@ -36,7 +35,8 @@ def _find_user_with_id(user_id: str) -> dict:
     }
     return twitter.query(api_endpoint, query_params)
 
-def _find_user_with_handle(handle: str):
+
+def _fetch_user_with_handle(handle: str) -> dict:
     api_endpoint = f"2/users/by/username/{handle}"
     query_params = {
         'user.fields': {
@@ -46,11 +46,12 @@ def _find_user_with_handle(handle: str):
     json_response = twitter.query(api_endpoint, query_params)
     return json_response
 
-def finalfunction(username):
-    searched_user = _find_user_with_handle(username)["data"]
+
+def favorite_users(handle: str) -> dict:
+    searched_user = _fetch_user_with_handle(handle)["data"]
     print(searched_user)
     id = searched_user["id"]
-    liked_tweets = _find_likes(user_id=id, max_results=5)
+    liked_tweets = _fetch_likes(user_id=id, max_results=5)
     ranked_users = _rank_most_liked_users(liked_tweets=liked_tweets)
 
     array = []
@@ -58,7 +59,7 @@ def finalfunction(username):
     for x in ranked_users:
         if(counter==5):
             break
-        response = _find_user_with_id(x)
+        response = _fetch_user_with_id(x)
         temp = {}
         temp.update({"name": response["data"].get('name')})
         temp.update({"handle": response["data"].get('username')})
@@ -77,5 +78,5 @@ def finalfunction(username):
 
 
 if __name__ == "__main__":
-    test = finalfunction("ronithhh")
+    test = favorite_users("ronithhh")
     print(test)

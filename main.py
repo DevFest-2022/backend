@@ -7,6 +7,6 @@ app = Flask(__name__)
 def hello():
     return 'Hello, World!'
 
-@app.route('/<username>')
-def main(username):
-    return search.finalfunction(username)
+@app.route('/<handle>')
+def main(handle):
+    return search.favorite_users(handle)
