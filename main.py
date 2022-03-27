@@ -9,4 +9,7 @@ def hello():
 
 @app.route('/<handle>')
 def main(handle):
-    return search.favorite_users(handle)
+    return search.favorite_users(
+        handle=handle, 
+        max_processed_tweets=10, 
+        max_results=5)

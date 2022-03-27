@@ -49,13 +49,16 @@ def _fetch_user_with_id(user_id: str) -> User:
     return User.from_json(response["data"])
 
 
-def favorite_users(handle: str) -> dict:
+def favorite_users(handle: str, max_processed_tweets: int, max_results: int) -> dict:
     user = _fetch_user_with_handle(handle)
-    liked_tweets = _fetch_likes(user_id=user.id, max_results=5)
+    liked_tweets = _fetch_likes(user_id=user.id, max_results=max_processed_tweets)
     ranked_users = _rank_most_liked_users(liked_tweets=liked_tweets)
 
     results = []
-    for i in range(0, 5):
+    for i in range(0, max_results):
+        if i >= len(ranked_users):
+            return
+        
         favorite_user = _fetch_user_with_id(ranked_users[i])
         results.append(favorite_user.export_json())
 
