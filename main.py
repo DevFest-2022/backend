@@ -1,11 +1,8 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/')
-def hello():
-    return 'Hello, World!'
-
-@app.route('/likes')
-def likes():
-    return "List of all liked users should go here!"
+@app.route('/search')
+def main():
+    username = request.args.get('username')
+    return username
