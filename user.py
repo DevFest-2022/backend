@@ -1,6 +1,3 @@
-from collections import namedtuple
-import json
-
 class User:
     def __init__(self, id: str, name: str, 
                 handle: str, bio: str, 
@@ -13,8 +10,8 @@ class User:
         self.is_verified = is_verified
     
     @classmethod
-    def from_json(user, json_data: dict):
-        return user(
+    def from_json(cls, json_data: dict):
+        return cls(
             id=_safely_get_str(json_data, key="id"), 
             name=_safely_get_str(json_data, key="name"), 
             handle=_safely_get_str(json_data, key="username"), 
@@ -31,6 +28,18 @@ class User:
             "photo_url": self.photo_url
         }
 
+    def __str__(self):
+        return f"""
+        **USER OBJECT**
+        id: {self.id}
+        name: {self.name}
+        handle: {self.handle}
+        bio: {self.bio}
+        photo_url: {self.photo_url}
+        is_verified: {self.is_verified}
+        """
+        
+    
 def _safely_get_str(json_data: dict, key: str) -> str:
     if key in json_data:
         return json_data[key]
