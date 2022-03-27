@@ -18,6 +18,28 @@ def process_likes(json_data):
     dictionary = Counter(ls)
     print(dictionary)
 
+def id_to_handle(idnum):
+    api_endpoint = "2/users/"+str(idnum)
+    query_params = {
+        'user.fields': {
+            "username,name,description,profile_image_url,verified"
+        }
+    }
+    json_response = twitter.query(api_endpoint, query_params)
+    print(json_response)
+    return json_response
+
+def handle_to_id(handle):
+    api_endpoint = "2/users/by/username/"+handle
+    query_params = {
+        'user.fields': {
+            "id,name,description,profile_image_url,verified"
+        }
+    }
+    json_response = twitter.query(api_endpoint, query_params)
+    print(json_response)
+    return json_response
+
 if __name__ == "__main__":
     api_endpoint = "2/users/166747718/liked_tweets"
     query_params = {
@@ -27,3 +49,7 @@ if __name__ == "__main__":
     }
     json_response = twitter.query(api_endpoint, query_params)
     print(json.dumps(json_response, indent=4, sort_keys=True))
+
+    # test
+    id_to_handle(166747718)
+    handle_to_id("tylerthecreator")
