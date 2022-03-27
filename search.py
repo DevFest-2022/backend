@@ -8,6 +8,7 @@ def _find_likes(user_id: str, max_results: int) -> list[dict]:
     }
     return twitter.query(api_endpoint, query_params)["data"]
 
+
 def _rank_most_liked_users(liked_tweets: list[dict]) -> list[str]:
     user_like_counts = {}
     for tweet in liked_tweets:
@@ -25,18 +26,18 @@ def _rank_most_liked_users(liked_tweets: list[dict]) -> list[str]:
     return [item[0] for item in sorted_user_like_counts]
     
 
-def id_to_handle(idnum):
-    api_endpoint = "2/users/"+str(idnum)
+
+def _find_user_with_id(user_id: str) -> dict:
+    api_endpoint = f"2/users/{user_id}"
     query_params = {
         'user.fields': {
             "username,name,description,profile_image_url,verified"
         }
     }
-    json_response = twitter.query(api_endpoint, query_params)
-    return json_response
+    return twitter.query(api_endpoint, query_params)
 
-def handle_to_id(handle):
-    api_endpoint = "2/users/by/username/"+handle
+def _find_user_with_handle(handle: str):
+    api_endpoint = f"2/users/by/username/{handle}"
     query_params = {
         'user.fields': {
             "id,name,description,profile_image_url,verified"
@@ -46,7 +47,7 @@ def handle_to_id(handle):
     return json_response
 
 def finalfunction(username):
-    searched_user = handle_to_id(username)["data"]
+    searched_user = _find_user_with_handle(username)["data"]
     print(searched_user)
     id = searched_user["id"]
     liked_tweets = _find_likes(user_id=id, max_results=5)
@@ -57,7 +58,7 @@ def finalfunction(username):
     for x in ranked_users:
         if(counter==5):
             break
-        response = id_to_handle(x)
+        response = _find_user_with_id(x)
         temp = {}
         temp.update({"name": response["data"].get('name')})
         temp.update({"handle": response["data"].get('username')})
