@@ -25,7 +25,11 @@ def main(handle):
 
 @app.route('/partial/<query>')
 def search_user(query):
-    search.users(query=query)
+    search_dict = search.users(query=query)
+    response = jsonify(search_dict)
+    response.status_code = 200
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
     
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)
