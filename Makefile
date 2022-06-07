@@ -4,7 +4,7 @@ build:
 	sudo docker build -t follownext-backend .
 
 run:
-	docker run -v $(PWD):/app -p 5001:5001 follownext-backend
+	docker run -v $(PWD):/app follownext-backend
 
 run-it:
-	docker run -v $(PWD):/app -p 5001:5001 -it --entrypoint /bin/bash follownext-backend
+	docker run -v $(PWD):/app -it --entrypoint /bin/bash follownext-backend
