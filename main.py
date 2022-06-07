@@ -28,5 +28,5 @@ def search_user(query):
     search.users(query=query)
     
 if __name__ == "__main__":
-    app.run(host="localhost", port=6000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
     
