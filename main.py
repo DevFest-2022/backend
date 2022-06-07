@@ -10,7 +10,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/')
 def hello():
     return 'Hello, World!'
-
+    
 @app.route('/<handle>')
 def main(handle):
     search_dict = search.favorite_users(
@@ -22,3 +22,11 @@ def main(handle):
     response.status_code = 200
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+@app.route('/partial/<query>')
+def search_user(query):
+    search.users(query=query)
+    
+if __name__ == "__main__":
+    app.run(host="localhost", port=6000, debug=True)
+    

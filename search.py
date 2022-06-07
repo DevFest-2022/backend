@@ -48,7 +48,6 @@ def _fetch_user_with_id(user_id: str) -> User:
     response = twitter.query(api_endpoint, query_params)
     return User.from_json(response["data"])
 
-
 def favorite_users(handle: str, max_processed_tweets: int, max_results: int) -> dict:
     user = _fetch_user_with_handle(handle)
     liked_tweets = _fetch_likes(user_id=user.id, max_results=max_processed_tweets)
@@ -67,3 +66,23 @@ def favorite_users(handle: str, max_processed_tweets: int, max_results: int) -> 
         'results': results
     }
 
+def users(query: str):
+    api_endpoint = f"1.1/users/search.json?q={query}"
+    response = twitter.query(api_endpoint, {})
+    
+    results = []
+    for user in response:
+        sanitizedUser = User(
+            id=user["id"],
+            name=user["name"],
+            handle=user["screen_name"],
+            bio="",
+            photo_url=user["profile_image_url"],
+            is_verified=False
+        )
+        
+        results.append(sanitizedUser.export_json())
+    
+    return {
+        'results': results
+    }
